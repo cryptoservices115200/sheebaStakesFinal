@@ -1,7 +1,9 @@
 import WoodBox from "../assets/images/Asset 104.png";
 import { BoxInfo } from "./BoxInfo";
+
 //
 export const WoodBoxes = ({ boxesState = [] }) => {
+
   return (
     <div className="container xl:absolute xl:-bottom-20 px-20 py-2.5 my-5 mx-auto flex flex-wrap justify-center gap-10">
       {boxesState.map(({ title, value, toFixed }) => (

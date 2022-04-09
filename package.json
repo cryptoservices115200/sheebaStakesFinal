@@ -5,6 +5,7 @@
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.0.4",
     "@craco/craco": "^6.4.0",
+    "@ethersproject/constants": "^5.6.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -16,6 +17,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
+    "react-toastify": "^8.2.0",
     "walletlink": "^2.5.0",
     "web-vitals": "^1.0.1",
     "web3": "^1.6.0",

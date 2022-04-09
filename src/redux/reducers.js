@@ -1,8 +1,10 @@
-import { SET_WALLET, SET_ADDRESS } from "./actions";
+import { SET_WALLET, SET_ADDRESS, SET_REWARD, SET_TOTAL_LOCK} from "./actions";
 
 const initialState = {
   wallet: undefined,
-  address: ''
+  address: '',
+  userReward:0,
+  totalLock:0
 };
 
 
@@ -19,6 +21,17 @@ function reducer(state = initialState, action) {
         ...state,
         address : action.payload
       };
+      case SET_REWARD:
+        return {
+          ...state,
+        userReward:action.payload
+        };
+      case SET_TOTAL_LOCK:
+        return {
+          ...state,
+            totalLock:action.payload
+        }
+        
 
     default:
       return state;

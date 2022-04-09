@@ -8,12 +8,12 @@ import Web3Modal from "web3modal";
 import { useCallback, useEffect, useReducer } from "react";
 import { useDispatch } from "react-redux";
 import { providers } from "ethers";
-const web3 = new Web3(Web3.givenProvider);
-const contractAddress = "0xa83055eaa689E477e7b2173eD7E3b55654b3A1f0";
-const stakeAddress = "0x5f91E73a864fcfE543a45c14F3e9CF86Ee00baC2";
-const migrationContractAddress = "0x713Cf7b5bCc50aB9260e3aDaabD13201579C3117";
+import { MaxUint256 } from "@ethersproject/constants";
 
-//const mcfHandler = new web3.eth.Contract(MCFabi, contractAddress);
+const web3 = new Web3(Web3.givenProvider);
+const sheebaContractAddress = "0xc1ef0ff1f99bca0f88deb0fa2b4359541029f206";
+const stakingContractAddress = "0x44d1303e4c6b8dd16e0d8bdd44c725a119d1279f";
+
 const supportedChains = [
   {
     name: "Ethereum Mainnet",
@@ -565,16 +565,59 @@ export const getCurrentWalletConnected = async () => {
   }
 };
 
-export const pullAllowance = async (permissionWallet, scratchAddress) => {
-  var myContract = new web3.eth.Contract(sheebaABI, contractAddress);
-  let allowance = await myContract.methods
-    .allowance(permissionWallet, scratchAddress)
+const stakingContractInstance = new web3.eth.Contract(
+  stakeAbi,
+  stakingContractAddress
+);
+const sheebaContractInstance = new web3.eth.Contract(
+  sheebaABI,
+  sheebaContractAddress
+);
+
+export const getUserBalance = async (address) => {
+  const _balance = await sheebaContractInstance.methods
+    .balanceOf(address)
     .call();
-  return allowance;
+  return web3.utils.fromWei(_balance, "ether");
 };
-export const approveCustomTokenAmount = async (tokenAmount) => {
-  var myContract = new web3.eth.Contract(sheebaABI, contractAddress);
-  await myContract.methods
-    .approve(stakeAddress, web3.utils.toBN(tokenAmount))
-    .send({ from: window.ethereum.selectedAddress });
+
+export const approve = async (address) => {
+  return sheebaContractInstance.methods
+    .approve(stakingContractAddress, MaxUint256)
+    .send({ from: address });
 };
+
+export const isApproved = async (address) => {
+  const _allowance = await sheebaContractInstance.methods
+    .allowance( address,stakingContractAddress)
+    .call();
+  return _allowance - MaxUint256 === 0;
+};
+
+export const stake = (address, amount) => {
+  return stakingContractInstance.methods
+    .stake(web3.utils.toWei(amount))
+    .send({ from: address });
+};
+
+export const withdraw = (address, amount) => {
+  return stakingContractInstance.methods
+    .withdraw(web3.utils.toWei(amount))
+    .send({ from: address });
+};
+
+export const getReward = (address) =>{
+  return stakingContractInstance.methods.earned(address).call();
+}
+
+export const getUserDepositedBalance = async (address) => {
+  const _balance = await stakingContractInstance.methods
+    .balanceOf(address)
+    .call();
+  return web3.utils.fromWei(_balance, "ether");
+};
+
+export const getTotalLockedBalance = async ()=>{
+  const _balance = await sheebaContractInstance.methods.balanceOf(stakingContractAddress).call();
+  return web3.utils.fromWei(_balance, "ether");
+}

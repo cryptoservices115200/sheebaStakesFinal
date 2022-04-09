@@ -2,17 +2,13 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
 import {
-  claimDividends,
   getCurrentWalletConnected,
-  pullAllowance,
-  approveCustomTokenAmount,
-  migrateTokens,
 } from "../Utils/walletInteract";
 import MCFabi from "../ABI/mcfabi.json";
 import { woodBoxesInitialState } from "../components/woodBoxes";
 import { WoodBoxes } from "../components/woodBoxesComponent";
 import { Spinner } from "../components/Spinner/Spinner";
-import stakeAbi from "../ABI/stakeAbi.json";
+
 const web3 = new Web3(
   "https://mainnet.infura.io/v3/b888190dbba14ddbb66162628cf0e555"
 );
@@ -73,14 +69,12 @@ export const Stats = () => {
       try {
         await migrateTokens(claimableBalance);
         setIsMounted(false);
-        pullBalance(wallet);
       } catch (error) {
         console.log(error); // User denied ticket
       }
     } else {
       try {
         //console.log(wallet);
-        const value = await pullAllowance(wallet, stakeAddress);
         if (claimableBalance > 0) {
           if (value < 1) {
             approveCustomTokenAmount(claimableBalance);
@@ -100,9 +94,9 @@ export const Stats = () => {
     setIsLoading(false);
   };
   async function pullBalance(userAddress) {
-    let userBalance = await mcfHandler.methods.balanceOf(userAddress).call();
-    console.log(`Hello ${userBalance}`);
-    setClaimable(userBalance);
+    // let userBalance = await mcfHandler.methods.balanceOf(userAddress).call();
+    // console.log(`Hello ${userBalance}`);
+    // setClaimable(userBalance);
   }
   const getStakeData = async () => {
       let stakeBalance = await contractAddress.methods.balanceOf(stakeAddress).call();
@@ -111,6 +105,7 @@ export const Stats = () => {
   const getUserOnStakeData = async (userAddress) => {
     let userCurrentRewards = await stakeAddress.methods.rewards(userAddress)
   }
+
   useEffect(() => {
     async function magic() {
       const { address } = await getCurrentWalletConnected();
@@ -128,8 +123,6 @@ export const Stats = () => {
       if (wallet.length > 0) {
         console.log("wlecome address");
         pullBalance(address);
-        await pullAllowance(wallet, stakeAddress);
-        console.log(claimDividends);
       }
       setIsLoading(false);
     }
@@ -137,7 +130,6 @@ export const Stats = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(wallet);
   return (
     <div className="flex flex-col items-center mb-10 mx-auto w-11/12 gap-12">
       <div className="totalDivs w-full md:w-10/12 lg:w-1/2">

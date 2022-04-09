@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 import {
   getCurrentWalletConnected,
-  approveTokens,
   buyticket,
-  claim,
   pullTier,
-  pullAllowance,
 } from "../Utils/walletInteract";
 //
 /* eslint-disable no-unused-vars */
@@ -164,7 +161,6 @@ export const LuckyScratchPage = () => {
 
       if (wallet.length > 0) {
         await getUserBalance(wallet);
-        await pullAllowance(wallet, contractAddress);
         setPrize(await pullLastPrize(address));
       }
       //console.log(wallet);
@@ -327,37 +323,36 @@ export const LuckyScratchPage = () => {
   };
 
   const handleApproveTokenClick = async () => {
-    if (!isPlaying) {
-      setIsLoading(true);
-      if (isApproved) {
-        try {
-          await buyticket();
-          setIsMounted(false);
-          const tier = await pullTier(wallet);
-          setTier(tier);
-          //setTier("0");
-          setIsPlaying(true);
-        } catch (error) {
-          console.log(error); // User denied ticket
-        }
-      } else {
-        try {
-          const value = await pullAllowance(wallet, gameAddress);
+    // if (!isPlaying) {
+    //   setIsLoading(true);
+    //   if (isApproved) {
+    //     try {
+    //       await buyticket();
+    //       setIsMounted(false);
+    //       const tier = await pullTier(wallet);
+    //       setTier(tier);
+    //       //setTier("0");
+    //       setIsPlaying(true);
+    //     } catch (error) {
+    //       console.log(error); // User denied ticket
+    //     }
+    //   } else {
+    //     try {
 
-          if (value < 1) {
-            approveTokens();
-          } else {
-            setApproveToken({
-              isApproved: true,
-              buttonText: "BUY",
-            });
-          }
-        } catch (error) {
-          console.log(error); // User denied transaction signature
-        }
-      }
-      setIsLoading(false);
-    }
+    //       if (value < 1) {
+    //         approveTokens();
+    //       } else {
+    //         setApproveToken({
+    //           isApproved: true,
+    //           buttonText: "BUY",
+    //         });
+    //       }
+    //     } catch (error) {
+    //       console.log(error); // User denied transaction signature
+    //     }
+    //   }
+    //   setIsLoading(false);
+    // }
   };
 
   return (
