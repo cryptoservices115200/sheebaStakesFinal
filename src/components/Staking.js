@@ -46,6 +46,7 @@ export const Staking = () => {
       const transaction = toast.loading("Transaction pending");
       stake(currentAddress, sheebDepositAmount)
         .then((res) => {
+          loadContractData();
           toast.update(transaction, {
             render: "Successfully staked",
             type: "success",
@@ -55,7 +56,6 @@ export const Staking = () => {
         })
         .catch((error) => {
           if (error.code === 4001) {
-            loadContractData();
             toast.update(transaction, {
               render:
                 "MetaMask Tx Signature: User denied transaction signature.",
