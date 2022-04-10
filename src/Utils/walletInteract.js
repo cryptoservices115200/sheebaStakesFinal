@@ -11,8 +11,8 @@ import { providers } from "ethers";
 import { MaxUint256 } from "@ethersproject/constants";
 
 const web3 = new Web3(Web3.givenProvider);
-const sheebaContractAddress = "0xc1ef0ff1f99bca0f88deb0fa2b4359541029f206";
-const stakingContractAddress = "0x44d1303e4c6b8dd16e0d8bdd44c725a119d1279f";
+const sheebaContractAddress = "0x6bb570C82C493135cc137644b168743Dc1F7eb12";
+const stakingContractAddress = "0x7ba0c736D5616BF03Ef9dfE1b66626a8a46Ce96B";
 
 const supportedChains = [
   {
